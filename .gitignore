@@ -1,0 +1,22 @@
+# --- Standard Python Ignores ---
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+ENV/
+.env
+
+# --- Database / Local Storage ---
+*.db
+chroma_db/
+
+# --- GENAI-SPECIFIC FILES ---
+generator.py
+database.py
+documentation/
+
+# --- OS Specific ---
+.DS_Store
+Thumbs.db

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ username }} | Portfoli-AI</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <style>
+        .port-header {
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            padding: 100px 0;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            border-left: 4px solid var(--primary);
+            padding-left: 1.5rem;
+        }
+
+        .card-meta {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Interactive Chat Widget */
+        #chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            font-family: 'Inter', sans-serif;
+        }
+
+        #chat-trigger {
+            width: 56px;
+            height: 56px;
+            border-radius: 28px;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.4);
+            transition: 0.3s;
+        }
+
+        #chat-trigger:hover {
+            transform: scale(1.1);
+        }
+
+        #chat-window {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 350px;
+            height: 500px;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            max-width: calc(100vw - 40px);
+        }
+
+        @media (max-width: 480px) {
+            #chat-window {
+                width: calc(100vw - 40px);
+                height: 450px;
+            }
+        }
+
+        .chat-msgs {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .bubble {
+            padding: 1rem;
+            border-radius: 16px;
+            max-width: 85%;
+            font-size: 0.9rem;
+        }
+
+        .bubble-bot {
+            background: rgba(255, 255, 255, 0.05);
+            align-self: flex-start;
+        }
+
+        .bubble-user {
+            background: var(--primary);
+            align-self: flex-end;
+        }
+
+        .chat-input-row {
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-row input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 0.5rem;
+        }
+
+        .chat-input-row input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .typing {
+            display: flex;
+            gap: 4px;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            width: fit-content;
+            align-self: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .typing span {
+            width: 6px;
+            height: 6px;
+            background: var(--text-dim);
+            border-radius: 50%;
+            animation: typing 1s infinite ease-in-out;
+        }
+
+        .typing span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Custom Scrollbar */
+        .chat-msgs::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .chat-msgs::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav style="padding: 2rem; position: absolute; top: 0; width: 100%; z-index: 10;">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <b style="font-family: 'Outfit'; font-size: 1.5rem;">PA.</b>
+            <div class="nav-links" style="display: flex; gap: 2rem;">
+                <a href="#about" style="color: var(--text-dim); text-decoration: none; font-size: 0.9rem;">ABOUT</a>
+                <a href="#experience"
+                    style="color: var(--text-dim); text-decoration: none; font-size: 0.9rem;">HISTORY</a>
+                <a href="#projects" style="color: var(--text-dim); text-decoration: none; font-size: 0.9rem;">WORK</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="port-header container" id="about">
+        <div class="animate">
+            <h1 class="gradient-text hero-title" style="font-size: 5rem; margin-bottom: 1.5rem;">{{ p.home.hero_title }}
+            </h1>
+            <p class="hero-text"
+                style="font-size: 1.4rem; color: var(--text-dim); max-width: 800px; font-weight: 300; line-height: 1.8;">
+                {{ p.home.personal_introduction }}
+            </p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="experience" style="padding: 100px 0;">
+            <h2 class="section-title">Career Narrative</h2>
+            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));">
+                {% set exp_data = p.experience if p.experience is iterable and p.experience is not mapping else
+                [p.experience] %}
+                {% for item in exp_data %}
+                <div class="glass" style="padding: 2.5rem;">
+                    {% if item is mapping %}
+                    <div class="card-meta">{{ item.get('company', 'Professional History') }} | {{ item.get('dates',
+                        'Recent') }}</div>
+                    <h3 style="font-size: 1.8rem; margin-bottom: 1rem;">{{ item.get('job_role', 'Specialist') }}</h3>
+                    <p style="color: var(--text-dim);">{{ item.get('description', 'Detailed accomplishments and
+                        technical impact.') }}</p>
+                    {% else %}
+                    <h3 style="font-size: 1.8rem; margin-bottom: 1rem;">Professional Milestone</h3>
+                    <p style="color: var(--text-dim);">{{ item }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section id="projects" style="padding-bottom: 100px;">
+            <h2 class="section-title">Technical Forge</h2>
+            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                {% set proj_data = p.projects if p.projects is iterable and p.projects is not mapping else [p.projects]
+                %}
+                {% for proj in proj_data %}
+                <div class="glass" style="padding: 2rem; border-bottom: 4px solid var(--primary);">
+                    {% if proj is mapping %}
+                    <div class="card-meta">{{ proj.get('tech_stack', 'Core Stack') }}</div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">{{ proj.get('name', 'Key Project') }}</h3>
+                    <p style="color: var(--text-dim); font-size: 0.95rem;">{{ proj.get('description', 'Technical
+                        implementation details.') }}</p>
+                    {% else %}
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Development Initiative</h3>
+                    <p style="color: var(--text-dim); font-size: 0.95rem;">{{ proj }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section style="padding-bottom: 100px;">
+            <h2 class="section-title">The Arsenal</h2>
+            <div class="glass" style="padding: 3rem;">
+                {% if p.skills is mapping %}
+                {% for category, items in p.skills.items() %}
+                <div style="margin-bottom: 2rem;">
+                    <h4
+                        style="color: var(--primary); text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.8rem; margin-bottom: 1rem;">
+                        {{ category.replace('_', ' ') }}</h4>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.8rem;">
+                        {% for skill in items %}
+                        <span class="btn btn-outline"
+                            style="cursor: default; padding: 0.5rem 1rem; border-color: rgba(99,102,241,0.2);">{{ skill
+                            }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+                {% elif p.skills is iterable and p.skills is not string %}
+                <div style="display: flex; flex-wrap: wrap; gap: 0.8rem;">
+                    {% for skill in p.skills %}
+                    <span class="btn btn-outline" style="cursor: default;">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div style="display: flex; flex-wrap: wrap; gap: 0.8rem;">
+                    <span class="btn btn-outline" style="cursor: default;">{{ p.skills }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+    </main>
+
+    <footer
+        style="padding: 4rem; text-align: center; border-top: 1px solid var(--glass-border); color: var(--text-dim);">
+        <p>© 2026 Crafted by Portfoli-AI Platform.</p>
+    </footer>
+
+    <!-- AI Agent Assistant -->
+    <div id="chat-widget">
+        <div id="chat-window" class="glass">
+            <div
+                style="padding: 1rem; border-bottom: 1px solid var(--glass-border); font-weight: 600; font-size: 0.8rem; letter-spacing: 0.1em;">
+                DIGITAL REPRESENTATIVE
+            </div>
+            <div class="chat-msgs" id="chatMsgs">
+                <div class="bubble bubble-bot">
+                    Hello, I'm {{ username }}'s professional AI agent. I have full knowledge of their resume and
+                    experience. How can I assist you?
+                </div>
+            </div>
+            <div class="chat-input-row">
+                <input type="text" id="chatInput" placeholder="Inquire about background...">
+                <button onclick="send()"
+                    style="background: none; border: none; font-weight: bold; color: var(--primary); cursor: pointer;">SEND</button>
+            </div>
+        </div>
+        <div id="chat-trigger">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+        </div>
+    </div>
+
+    <script>
+        const widget = document.getElementById('chat-window');
+        const trigger = document.getElementById('chat-trigger');
+        const input = document.getElementById('chatInput');
+        const msgs = document.getElementById('chatMsgs');
+
+        trigger.onclick = () => {
+            widget.style.display = widget.style.display === 'flex' ? 'none' : 'flex';
+        };
+
+        async function send() {
+            const query = input.value.trim();
+            if (!query) return;
+
+            append('user', query);
+            input.value = '';
+            showTyping();
+
+            try {
+                const res = await fetch('/chat/{{ user_id }}', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query })
+                });
+                const data = await res.json();
+                hideTyping();
+                append('bot', data.response);
+            } catch (e) {
+                hideTyping();
+                append('bot', "System offline. Please try again later.");
+            }
+        }
+
+        function showTyping() {
+            const div = document.createElement('div');
+            div.id = 'typing-indicator';
+            div.className = 'typing';
+            div.innerHTML = '<span></span><span></span><span></span>';
+            msgs.appendChild(div);
+            msgs.scrollTop = msgs.scrollHeight;
+        }
+
+        function hideTyping() {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) indicator.remove();
+        }
+
+        function append(role, text) {
+            const div = document.createElement('div');
+            div.className = `bubble bubble-${role}`;
+            div.innerText = text;
+            msgs.appendChild(div);
+            // Smooth scroll to bottom
+            msgs.scrollTo({ top: msgs.scrollHeight, behavior: 'smooth' });
+        }
+
+        input.onkeypress = (e) => { if (e.key === 'Enter') send(); };
+    </script>
+</body>
+
+</html>

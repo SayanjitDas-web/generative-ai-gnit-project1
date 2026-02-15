@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfoli-AI | Your Personal AI Presence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <style>
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 40%;
+            height: 40%;
+            background: radial-gradient(circle, var(--primary-glow), transparent 70%);
+            top: 10%;
+            right: 5%;
+            z-index: -1;
+        }
+
+        .hero-h1 {
+            font-size: clamp(3rem, 10vw, 5rem);
+            line-height: 1.1;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="hero container">
+        <div class="animate">
+            <h1 class="hero-h1 gradient-text">Elevate Your Career with AI Auto-Portfolios.</h1>
+            <p style="font-size: 1.5rem; color: var(--text-dim); max-width: 600px; margin-bottom: 3rem;">
+                Turn your static resume into a high-fidelity digital agent. Hosted, interactive, and powered by RAG
+                technology.
+            </p>
+            <div style="display: flex; gap: 1rem;">
+                <a href="/register" class="btn btn-primary">Start Building Free</a>
+                <a href="/login" class="btn btn-outline">Member Login</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
