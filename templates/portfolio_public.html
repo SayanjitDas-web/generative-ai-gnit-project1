@@ -6,305 +6,528 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ username }} | Portfoli-AI</title>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="/static/css/main.css">
     <style>
+        :root {
+            --section-spacing: 120px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #030406;
+            /* Slightly deeper black */
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Nav Refinement */
+        nav {
+            padding: 2.5rem 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+        }
+
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .port-logo {
+            font-size: 1.8rem;
+            letter-spacing: -0.05em;
+            color: white;
+            text-decoration: none;
+        }
+
+        .port-nav-links {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .port-nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            transition: color 0.3s;
+        }
+
+        .port-nav-links a:hover {
+            color: white;
+        }
+
+        /* Hero / Header Section */
         .port-header {
-            min-height: 70vh;
+            min-height: 85vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            position: relative;
-            padding: 100px 0;
+            padding: 160px 0 80px;
         }
 
-        .section-title {
-            font-size: 3rem;
-            margin-bottom: 3rem;
-            border-left: 4px solid var(--primary);
-            padding-left: 1.5rem;
+        .hero-title {
+            font-size: clamp(3.5rem, 8vw, 6rem);
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 2.5rem;
+            letter-spacing: -0.03em;
         }
 
-        .card-meta {
-            color: var(--primary);
-            font-weight: 600;
+        .hero-text {
+            font-size: 1.25rem;
+            color: var(--text-dim);
+            max-width: 700px;
+            font-weight: 400;
+            line-height: 1.8;
+            opacity: 0.9;
+        }
+
+        /* Section Styling */
+        .section-wrap {
+            padding: var(--section-spacing) 0;
+        }
+
+        .section-header-top {
+            margin-bottom: 4rem;
+        }
+
+        .section-title-alt {
             font-size: 0.9rem;
+            color: var(--primary);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.5rem;
+            letter-spacing: 0.2em;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: block;
         }
 
-        /* Interactive Chat Widget */
+        .section-main-heading {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        /* Card Styling */
+        .port-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 3.5rem;
+            border-radius: 32px;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .port-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(99, 102, 241, 0.3);
+            transform: translateY(-8px);
+        }
+
+        .card-tag {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-heading {
+            font-size: 1.75rem;
+            margin-bottom: 1.25rem;
+            line-height: 1.3;
+        }
+
+        .card-desc {
+            color: var(--text-dim);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        /* Skills Chips */
+        .skill-tag {
+            padding: 0.6rem 1.2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 100px;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            transition: all 0.3s;
+        }
+
+        .skill-tag:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Chat Widget Polishing */
         #chat-widget {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 30px;
+            right: 30px;
             z-index: 1000;
-            font-family: 'Inter', sans-serif;
         }
 
         #chat-trigger {
-            width: 56px;
-            height: 56px;
-            border-radius: 28px;
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            /* Squircle */
             background: var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.4);
-            transition: 0.3s;
-        }
-
-        #chat-trigger:hover {
-            transform: scale(1.1);
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.4);
+            transition: all 0.3s;
         }
 
         #chat-window {
             position: absolute;
-            bottom: 70px;
+            bottom: 80px;
             right: 0;
-            width: 350px;
-            height: 500px;
+            width: 380px;
+            height: 550px;
+            background: #0d1117;
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
             display: none;
             flex-direction: column;
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            max-width: calc(100vw - 40px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
         }
 
-        @media (max-width: 480px) {
-            #chat-window {
-                width: calc(100vw - 40px);
-                height: 450px;
-            }
+        .chat-header {
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-status {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
         }
 
         .chat-msgs {
-            flex-grow: 1;
-            overflow-y: auto;
             padding: 1.5rem;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.25rem;
+            overflow-y: auto;
+            flex-grow: 1;
         }
 
         .bubble {
-            padding: 1rem;
-            border-radius: 16px;
+            padding: 1rem 1.25rem;
+            border-radius: 18px;
+            line-height: 1.5;
+            font-size: 0.95rem;
             max-width: 85%;
-            font-size: 0.9rem;
+            animation: messageSlide 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            opacity: 0;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .bubble-bot {
-            background: rgba(255, 255, 255, 0.05);
+            background: #1f2937;
+            border-bottom-left-radius: 4px;
             align-self: flex-start;
         }
 
         .bubble-user {
             background: var(--primary);
+            border-bottom-right-radius: 4px;
             align-self: flex-end;
+            color: white;
         }
 
-        .chat-input-row {
-            padding: 1rem;
-            background: rgba(0, 0, 0, 0.2);
-            border-top: 1px solid var(--glass-border);
-            display: flex;
-            gap: 10px;
-        }
-
-        .chat-input-row input {
-            flex: 1;
-            border: none;
-            background: transparent;
-            padding: 0.5rem;
-        }
-
-        .chat-input-row input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .typing {
-            display: flex;
-            gap: 4px;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            width: fit-content;
-            align-self: flex-start;
-            margin-bottom: 1rem;
-        }
-
-        .typing span {
+        .dot {
             width: 6px;
             height: 6px;
             background: var(--text-dim);
             border-radius: 50%;
-            animation: typing 1s infinite ease-in-out;
+            display: inline-block;
+            animation: bounce 1.4s infinite ease-in-out both;
         }
 
-        .typing span:nth-child(2) {
-            animation-delay: 0.2s;
+        .dot:nth-child(1) {
+            animation-delay: -0.32s;
         }
 
-        .typing span:nth-child(3) {
-            animation-delay: 0.4s;
+        .dot:nth-child(2) {
+            animation-delay: -0.16s;
         }
 
-        @keyframes typing {
+        @keyframes bounce {
 
             0%,
+            80%,
             100% {
-                transform: translateY(0);
+                transform: scale(0);
             }
 
-            50% {
-                transform: translateY(-5px);
+            40% {
+                transform: scale(1.0);
             }
         }
 
-        /* Custom Scrollbar */
-        .chat-msgs::-webkit-scrollbar {
-            width: 5px;
+        .chat-input-row {
+            padding: 1.25rem;
+            background: rgba(255, 255, 255, 0.01);
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 12px;
         }
 
-        .chat-msgs::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+        .chat-input-row input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid transparent;
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .chat-input-row input:focus {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+            outline: none;
+        }
+
+        .send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+            background: var(--secondary);
+        }
+
+        .close-chat {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 1.5rem;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.3s;
+        }
+
+        .close-chat:hover {
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3.5rem;
+            }
+
+            .section-main-heading {
+                font-size: 2.25rem;
+            }
+
+            .port-card {
+                padding: 2rem;
+            }
+
+            .port-nav-links {
+                display: none;
+            }
         }
     </style>
 </head>
 
 <body>
-    <nav style="padding: 2rem; position: absolute; top: 0; width: 100%; z-index: 10;">
-        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
-            <b style="font-family: 'Outfit'; font-size: 1.5rem;">PA.</b>
-            <div class="nav-links" style="display: flex; gap: 2rem;">
-                <a href="#about" style="color: var(--text-dim); text-decoration: none; font-size: 0.9rem;">ABOUT</a>
-                <a href="#experience"
-                    style="color: var(--text-dim); text-decoration: none; font-size: 0.9rem;">HISTORY</a>
-                <a href="#projects" style="color: var(--text-dim); text-decoration: none; font-size: 0.9rem;">WORK</a>
+    <nav>
+        <div class="container nav-inner">
+            <a href="/" class="port-logo"><b>{{ username[0]|upper }}{{ username[1]|upper }}.</b></a>
+            <div class="port-nav-links">
+                <a href="#about">ABOUT</a>
+                <a href="#experience">HISTORY</a>
+                <a href="#projects">WORK</a>
+                <a href="#arsenal">SKILLS</a>
             </div>
         </div>
     </nav>
 
     <header class="port-header container" id="about">
         <div class="animate">
-            <h1 class="gradient-text hero-title" style="font-size: 5rem; margin-bottom: 1.5rem;">{{ p.home.hero_title }}
-            </h1>
-            <p class="hero-text"
-                style="font-size: 1.4rem; color: var(--text-dim); max-width: 800px; font-weight: 300; line-height: 1.8;">
+            <h1 class="gradient-text hero-title">{{ p.home.hero_title }}</h1>
+            <p class="hero-text">
                 {{ p.home.personal_introduction }}
             </p>
         </div>
     </header>
 
     <main class="container">
-        <section id="experience" style="padding: 100px 0;">
-            <h2 class="section-title">Career Narrative</h2>
+        <section id="experience" class="section-wrap">
+            <div class="section-header-top animate">
+                <span class="section-title-alt">Journey</span>
+                <h2 class="section-main-heading">Career History</h2>
+            </div>
             <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));">
                 {% set exp_data = p.experience if p.experience is iterable and p.experience is not mapping else
                 [p.experience] %}
                 {% for item in exp_data %}
-                <div class="glass" style="padding: 2.5rem;">
+                <div class="port-card animate">
                     {% if item is mapping %}
-                    <div class="card-meta">{{ item.get('company', 'Professional History') }} | {{ item.get('dates',
+                    <div class="card-tag">{{ item.get('company', 'Professional History') }} / {{ item.get('dates',
                         'Recent') }}</div>
-                    <h3 style="font-size: 1.8rem; margin-bottom: 1rem;">{{ item.get('job_role', 'Specialist') }}</h3>
-                    <p style="color: var(--text-dim);">{{ item.get('description', 'Detailed accomplishments and
-                        technical impact.') }}</p>
+                    <h3 class="card-heading">{{ item.get('job_role', 'Specialist') }}</h3>
+                    <p class="card-desc">{{ item.get('description', 'Detailed accomplishments and technical impact.') }}
+                    </p>
                     {% else %}
-                    <h3 style="font-size: 1.8rem; margin-bottom: 1rem;">Professional Milestone</h3>
-                    <p style="color: var(--text-dim);">{{ item }}</p>
+                    <h3 class="card-heading">Professional Milestone</h3>
+                    <p class="card-desc">{{ item }}</p>
                     {% endif %}
                 </div>
                 {% endfor %}
             </div>
         </section>
 
-        <section id="projects" style="padding-bottom: 100px;">
-            <h2 class="section-title">Technical Forge</h2>
-            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+        <section id="projects" class="section-wrap">
+            <div class="section-header-top animate">
+                <span class="section-title-alt">Creativity</span>
+                <h2 class="section-main-heading">Selected Works</h2>
+            </div>
+            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
                 {% set proj_data = p.projects if p.projects is iterable and p.projects is not mapping else [p.projects]
                 %}
                 {% for proj in proj_data %}
-                <div class="glass" style="padding: 2rem; border-bottom: 4px solid var(--primary);">
+                <div class="port-card animate">
                     {% if proj is mapping %}
-                    <div class="card-meta">{{ proj.get('tech_stack', 'Core Stack') }}</div>
-                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">{{ proj.get('name', 'Key Project') }}</h3>
-                    <p style="color: var(--text-dim); font-size: 0.95rem;">{{ proj.get('description', 'Technical
-                        implementation details.') }}</p>
+                    <div class="card-tag">{{ proj.get('tech_stack', 'Core Stack') }}</div>
+                    <h3 class="card-heading">{{ proj.get('name', 'Key Project') }}</h3>
+                    <p class="card-desc">{{ proj.get('description', 'Technical implementation details.') }}</p>
                     {% else %}
-                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Development Initiative</h3>
-                    <p style="color: var(--text-dim); font-size: 0.95rem;">{{ proj }}</p>
+                    <h3 class="card-heading">Development Initiative</h3>
+                    <p class="card-desc">{{ proj }}</p>
                     {% endif %}
                 </div>
                 {% endfor %}
             </div>
         </section>
 
-        <section style="padding-bottom: 100px;">
-            <h2 class="section-title">The Arsenal</h2>
-            <div class="glass" style="padding: 3rem;">
+        <section id="arsenal" class="section-wrap" style="padding-bottom: 160px;">
+            <div class="section-header-top animate">
+                <span class="section-title-alt">Expertise</span>
+                <h2 class="section-main-heading">The Arsenal</h2>
+            </div>
+            <div class="glass animate" style="padding: 4rem; border-radius: 40px;">
                 {% if p.skills is mapping %}
-                {% for category, items in p.skills.items() %}
-                <div style="margin-bottom: 2rem;">
-                    <h4
-                        style="color: var(--primary); text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.8rem; margin-bottom: 1rem;">
-                        {{ category.replace('_', ' ') }}</h4>
-                    <div style="display: flex; flex-wrap: wrap; gap: 0.8rem;">
-                        {% for skill in items %}
-                        <span class="btn btn-outline"
-                            style="cursor: default; padding: 0.5rem 1rem; border-color: rgba(99,102,241,0.2);">{{ skill
-                            }}</span>
-                        {% endfor %}
+                <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 4rem;">
+                    {% for category, items in p.skills.items() %}
+                    <div>
+                        <h4
+                            style="color: white; font-size: 1.1rem; margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;">
+                            {{ category.replace('_', ' ') }}
+                        </h4>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.8rem;">
+                            {% for skill in items %}
+                            <span class="skill-tag">{{ skill }}</span>
+                            {% endfor %}
+                        </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
                 {% elif p.skills is iterable and p.skills is not string %}
-                <div style="display: flex; flex-wrap: wrap; gap: 0.8rem;">
+                <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
                     {% for skill in p.skills %}
-                    <span class="btn btn-outline" style="cursor: default;">{{ skill }}</span>
+                    <span class="skill-tag">{{ skill }}</span>
                     {% endfor %}
                 </div>
                 {% else %}
-                <div style="display: flex; flex-wrap: wrap; gap: 0.8rem;">
-                    <span class="btn btn-outline" style="cursor: default;">{{ p.skills }}</span>
+                <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+                    <span class="skill-tag">{{ p.skills }}</span>
                 </div>
                 {% endif %}
             </div>
         </section>
     </main>
 
-    <footer
-        style="padding: 4rem; text-align: center; border-top: 1px solid var(--glass-border); color: var(--text-dim);">
-        <p>© 2026 Crafted by Portfoli-AI Platform.</p>
+    <footer style="padding: 6rem 0; border-top: 1px solid rgba(255,255,255,0.05); text-align: center;">
+        <div class="container">
+            <p style="color: var(--text-dim); font-size: 0.9rem; letter-spacing: 0.05em;">
+                © 2026 Crafted by <b>Portfoli-AI</b>. Representing {{ username }}.
+            </p>
+        </div>
     </footer>
 
     <!-- AI Agent Assistant -->
     <div id="chat-widget">
-        <div id="chat-window" class="glass">
-            <div
-                style="padding: 1rem; border-bottom: 1px solid var(--glass-border); font-weight: 600; font-size: 0.8rem; letter-spacing: 0.1em;">
-                DIGITAL REPRESENTATIVE
+        <div id="chat-window">
+            <div class="chat-header">
+                <div class="chat-status"></div>
+                <div>
+                    <div style="font-weight: 700; font-size: 0.9rem; color: white;">AI REPRESENTATIVE</div>
+                    <div style="font-size: 0.75rem; color: var(--text-dim);">Online & Ready</div>
+                </div>
+                <button class="close-chat" id="closeChat">&times;</button>
             </div>
             <div class="chat-msgs" id="chatMsgs">
                 <div class="bubble bubble-bot">
-                    Hello, I'm {{ username }}'s professional AI agent. I have full knowledge of their resume and
-                    experience. How can I assist you?
+                    Hello, I'm {{ username }}'s digital representative. I'm trained on their career data. How can I
+                    help?
                 </div>
             </div>
             <div class="chat-input-row">
-                <input type="text" id="chatInput" placeholder="Inquire about background...">
-                <button onclick="send()"
-                    style="background: none; border: none; font-weight: bold; color: var(--primary); cursor: pointer;">SEND</button>
+                <input type="text" id="chatInput" placeholder="Type a message...">
+                <button onclick="send()" class="send-btn" id="sendBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
             </div>
         </div>
         <div id="chat-trigger">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
             </svg>
@@ -314,12 +537,22 @@
     <script>
         const widget = document.getElementById('chat-window');
         const trigger = document.getElementById('chat-trigger');
+        const closeBtn = document.getElementById('closeChat');
         const input = document.getElementById('chatInput');
         const msgs = document.getElementById('chatMsgs');
 
-        trigger.onclick = () => {
-            widget.style.display = widget.style.display === 'flex' ? 'none' : 'flex';
+        const toggleChat = () => {
+            const isVisible = widget.style.display === 'flex';
+            widget.style.display = isVisible ? 'none' : 'flex';
+            if (!isVisible) {
+                trigger.style.transform = 'rotate(-10deg) scale(0.9)';
+                setTimeout(() => trigger.style.transform = 'none', 200);
+                input.focus();
+            }
         };
+
+        trigger.onclick = toggleChat;
+        closeBtn.onclick = toggleChat;
 
         async function send() {
             const query = input.value.trim();
@@ -340,15 +573,19 @@
                 append('bot', data.response);
             } catch (e) {
                 hideTyping();
-                append('bot', "System offline. Please try again later.");
+                append('bot', "Connection issues. Please try again.");
             }
         }
 
         function showTyping() {
             const div = document.createElement('div');
             div.id = 'typing-indicator';
-            div.className = 'typing';
-            div.innerHTML = '<span></span><span></span><span></span>';
+            div.className = 'bubble bubble-bot';
+            div.style.display = 'flex';
+            div.style.gap = '4px';
+            div.style.width = 'fit-content';
+            div.style.padding = '12px 18px';
+            div.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
             msgs.appendChild(div);
             msgs.scrollTop = msgs.scrollHeight;
         }
@@ -363,11 +600,28 @@
             div.className = `bubble bubble-${role}`;
             div.innerText = text;
             msgs.appendChild(div);
-            // Smooth scroll to bottom
             msgs.scrollTo({ top: msgs.scrollHeight, behavior: 'smooth' });
         }
 
         input.onkeypress = (e) => { if (e.key === 'Enter') send(); };
+
+        // Scroll animations using Intersection Observer
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
+            observer.observe(el);
+        });
     </script>
 </body>
 
