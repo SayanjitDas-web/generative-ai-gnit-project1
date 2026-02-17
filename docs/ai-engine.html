@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Engine | Portfoli-AI Docs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <aside class="sidebar">
+        <a href="index.html" class="logo">Portfoli-AI</a>
+
+        <nav class="nav-section">
+            <div class="nav-title">Introduction</div>
+            <a href="index.html" class="nav-link">Getting Started</a>
+            <a href="architecture.html" class="nav-link">System Architecture</a>
+        </nav>
+
+        <nav class="nav-section">
+            <div class="nav-title">Core Engine</div>
+            <a href="ai-engine.html" class="nav-link active">AI & LangGraph</a>
+            <a href="backend.html" class="nav-link">Backend & DB</a>
+        </nav>
+
+        <nav class="nav-section">
+            <div class="nav-title">Interface</div>
+            <a href="frontend.html" class="nav-link">Frontend & UI</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <h1>AI Engine & Generation</h1>
+        <p>
+            The heart of Portfoli-AI is its intelligent generation pipeline, orchestrated by
+            <strong>LangGraph</strong>. This allows for complex, multi-step reasoning that a simple
+            linear prompt cannot achieve.
+        </p>
+
+        <h2>LangGraph Orchestration</h2>
+        <p>
+            The generation process is modeled as a directed acyclic graph (DAG). Unlike traditional linear chains, a
+            graph allows us to maintain a persistent state and potentially loop back if data extraction is incomplete.
+        </p>
+
+        <div class="code-header">
+            <span class="file-path">generator.py</span>
+        </div>
+        <pre><code class="language-python"># Defining the Graph
+builder = StateGraph(GraphState)
+builder.add_node("extract", extract_wrapper) # Parses raw text
+builder.add_node("write", write_wrapper)     # Generates creative copy
+
+builder.set_entry_point("extract")
+builder.add_edge("extract", "write")
+builder.add_edge("write", END)</code></pre>
+
+        <h2>1. The Extraction Node (`extract_resume_node`)</h2>
+        <p>
+            This node is the "data scientist" of the system. It takes unstructured PDF text and maps it into a
+            strict schema.
+        </p>
+        <div class="glass" style="padding: 1.5rem; margin-bottom: 2rem; border-left: 4px solid var(--primary);">
+            <strong>Strategy: Structural Constraints</strong><br>
+            We use a "System Message" to set the persona and a "Human Message" that explicitly demands raw JSON.
+            By providing a clear list of required keys (e.g., <code>experience</code>, <code>skills</code>), we
+            reduce hallucinations and ensure the data is ready for the next node.
+        </div>
+
+        <h2>2. The Generation Node (`write_portfolio_node`)</h2>
+        <p>
+            The "copywriter" node. It transforms the dry, structured data into high-converting portfolio copy.
+        </p>
+        <div class="glass" style="padding: 1.5rem; margin-bottom: 2rem; border-left: 4px solid var(--secondary);">
+            <strong>Strategy: Role-Based Expansion</strong><br>
+            The prompt instructs the AI to categorize skills and rewrite experience descriptions to focus on
+            <em>impact</em> rather than just tasks. This adds qualitative value to the quantitative data found in a
+            resume.
+        </div>
+
+        <h2>Retrieval-Augmented Generation (RAG)</h2>
+        <p>
+            The AI Representative uses RAG to answer visitor questions. This is implemented in <code>database.py</code>
+            using <strong>ChromaDB</strong>.
+        </p>
+
+        <h3>Multi-Tenancy & Security</h3>
+        <p>
+            To ensure one user's data isn't leaked to another, we implement strict metadata filtering. When data
+            is "upserted" (added/updated), it is tagged with a <code>user_id</code>.
+        </p>
+
+        <div class="code-header">
+            <span class="file-path">database.py</span>
+        </div>
+        <pre><code class="language-python">def query_resume(self, user_id, query_text):
+    # The 'where' clause ensures we only retrieve data for THIS user
+    results = self.collection.query(
+        query_texts=[query_text],
+        n_results=3,
+        where={"user_id": user_id}
+    )
+    return results["documents"][0]</code></pre>
+
+        <h3>Prompt Injection (The Representative Persona)</h3>
+        <p>
+            The retrieved documents are then injected into the chat context.
+        </p>
+        <div class="code-header">
+            <span class="file-path">Chat Prompt Fragment</span>
+        </div>
+        <pre><code class="language-text">Context: {retrieved_knowledge}
+Question: {visitor_query}
+
+Instruction: Use the context above to represent the user.
+If the answer is not in the context, say you don't know but offer to connect them.</code></pre>
+
+        <h2>State Preservation</h2>
+        <p>
+            The <code>GraphState</code> is a <code>TypedDict</code> that travels through the graph.
+            It carries the <code>resume_text</code>, the <code>structured_data</code>, and eventually the
+            <code>portfolio_content</code>. This modularity allows us to test nodes in isolation without
+            re-running the entire pipeline.
+        </p>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+</body>
+
+</html>

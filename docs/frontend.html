@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend | Portfoli-AI Docs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <aside class="sidebar">
+        <a href="index.html" class="logo">Portfoli-AI</a>
+
+        <nav class="nav-section">
+            <div class="nav-title">Introduction</div>
+            <a href="index.html" class="nav-link">Getting Started</a>
+            <a href="architecture.html" class="nav-link">System Architecture</a>
+        </nav>
+
+        <nav class="nav-section">
+            <div class="nav-title">Core Engine</div>
+            <a href="ai-engine.html" class="nav-link">AI & LangGraph</a>
+            <a href="backend.html" class="nav-link">Backend & DB</a>
+        </nav>
+
+        <nav class="nav-section">
+            <div class="nav-title">Interface</div>
+            <a href="frontend.html" class="nav-link active">Frontend & UI</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <h1>Frontend & UI Design</h1>
+        <p>
+            The frontend of Portfoli-AI is designed for visual impact, using a combination of
+            <strong>Jinja2</strong> for server-side rendering and <strong>Vanilla CSS</strong> for a
+            high-performance, custom-tailored aesthetic.
+        </p>
+
+        <h2>Design System</h2>
+        <p>
+            The UI is built on a "Glassmorphism" design language, characterized by:
+        </p>
+        <ul>
+            <li><strong>Dark Mode First</strong>: Deeper blacks and high-contrast typography.</li>
+            <li><strong>Transparency</strong>: Semi-transparent backgrounds with backdrop filters (blur).</li>
+            <li><strong>Typography</strong>: 'Outfit' for striking headers and 'Inter' for high legibility in body text.
+            </li>
+        </ul>
+
+        <h2>AI Representative Widget</h2>
+        <p>
+            The chat widget is a complex component that handles real-time interaction with the AI backend.
+            It features:
+        </p>
+        <ul>
+            <li><strong>Smooth Transitions</strong>: CSS keyframe animations for message entry.</li>
+            <li><strong>Bouncing Indicator</strong>: A sophisticated typing indicator to manage user expectations.</li>
+            <li><strong>Dynamic Scaling</strong>: Responsive design that stays elegant on mobile viewports.</li>
+        </ul>
+
+        <div class="code-header">
+            <span class="file-path">portfolio_public.html (CSS Fragment)</span>
+        </div>
+        <pre><code class="language-css">.bubble {
+    animation: messageSlide 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+@keyframes messageSlide {
+    from { opacity: 0; transform: translateY(10px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}</code></pre>
+
+        <h2>Scroll Animations</h2>
+        <p>
+            We use the <code>IntersectionObserver</code> API to trigger entrance animations as
+            the user scrolls through the portfolio.
+        </p>
+
+        <div class="code-header">
+            <span class="file-path">JavaScript Fragment</span>
+        </div>
+        <pre><code class="language-javascript">const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+});</code></pre>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+</body>
+
+</html>

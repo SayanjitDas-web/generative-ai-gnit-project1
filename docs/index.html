@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation | Portfoli-AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <aside class="sidebar">
+        <a href="index.html" class="logo">Portfoli-AI</a>
+
+        <nav class="nav-section">
+            <div class="nav-title">Introduction</div>
+            <a href="index.html" class="nav-link active">Getting Started</a>
+            <a href="architecture.html" class="nav-link">System Architecture</a>
+        </nav>
+
+        <nav class="nav-section">
+            <div class="nav-title">Core Engine</div>
+            <a href="ai-engine.html" class="nav-link">AI & LangGraph</a>
+            <a href="backend.html" class="nav-link">Backend & DB</a>
+        </nav>
+
+        <nav class="nav-section">
+            <div class="nav-title">Interface</div>
+            <a href="frontend.html" class="nav-link">Frontend & UI</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <span class="tag">v1.0.0</span>
+        <h1>Getting Started</h1>
+        <p>
+            Portfoli-AI is an advanced generative AI platform that transforms static resumes into interactive,
+            AI-powered digital agents. By combining Large Language Models (LLMs) with Retrieval-Augmented
+            Generation (RAG), the platform creates a living representation of a professional's career journey.
+        </p>
+
+        <h2>Project Overview</h2>
+        <p>
+            The project is designed with a focus on modularity and high-performance AI orchestration.
+            It leverages the following core stack:
+        </p>
+        <ul>
+            <li><strong>AI Orchestration</strong>: LangGraph & LangChain</li>
+            <li><strong>Backend</strong>: FastAPI & SQLite</li>
+            <li><strong>Vector Storage</strong>: ChromaDB (for RAG)</li>
+            <li><strong>Layout</strong>: Jinja2 Templates & Vanilla CSS</li>
+        </ul>
+
+        <h2>Installation</h2>
+        <p>To set up the project locally, follow these steps:</p>
+
+        <div class="code-header">
+            <span class="file-path">Terminal</span>
+        </div>
+        <pre><code class="language-bash"># Clone the repository
+git clone https://github.com/SayanjitDas-web/generative-ai-gnit-project1.git
+cd generative-ai-gnit-project1
+
+# Create virtual environment
+python -m venv .venv
+source .venv/bin/activate  # or .venv\Scripts\activate on Windows
+
+# Install dependencies
+pip install -r requirements.txt</code></pre>
+
+        <h2>Environment Configuration</h2>
+        <p>Ensure you have an <code>.env</code> file in the project root with your OpenRouter API key.</p>
+
+        <div class="code-header">
+            <span class="file-path">.env</span>
+        </div>
+        <pre><code class="language-env">OPENROUTER_API_KEY=your_api_key_here</code></pre>
+
+        <h2>Running the App</h2>
+        <div class="code-header">
+            <span class="file-path">Terminal</span>
+        </div>
+        <pre><code class="language-bash">uvicorn main:app --reload</code></pre>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture | Portfoli-AI Docs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <aside class="sidebar">
+        <a href="index.html" class="logo">Portfoli-AI</a>
+
+        <nav class="nav-section">
+            <div class="nav-title">Introduction</div>
+            <a href="index.html" class="nav-link">Getting Started</a>
+            <a href="architecture.html" class="nav-link active">System Architecture</a>
+        </nav>
+
+        <nav class="nav-section">
+            <div class="nav-title">Core Engine</div>
+            <a href="ai-engine.html" class="nav-link">AI & LangGraph</a>
+            <a href="backend.html" class="nav-link">Backend & DB</a>
+        </nav>
+
+        <nav class="nav-section">
+            <div class="nav-title">Interface</div>
+            <a href="frontend.html" class="nav-link">Frontend & UI</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <h1>System Architecture</h1>
+        <p>
+            Portfoli-AI follows a modular architecture that separates the AI orchestration logic from the
+            web serving and data persistence layers. This ensures a scalable and maintainable codebase.
+        </p>
+
+        <h2>High-Level Workflow</h2>
+        <p>
+            The lifecycle of a portfolio generation event involves three major stages: extraction,
+            augmentation, and synthesis.
+        </p>
+        <ul>
+            <li><strong>Ingestion</strong>: The user uploads a PDF. <code>main.py</code> handles the upload and stores
+                the raw text.</li>
+            <li><strong>Graph Execution</strong>: <code>generator.py</code> triggers the LangGraph workflow to parse and
+                expand data.</li>
+            <li><strong>Persistence</strong>: The final JSON structure is saved to SQLite, and extracted knowledge is
+                upserted to ChromaDB.</li>
+        </ul>
+
+        <h2>The Data Transformation Lifecycle</h2>
+        <p>
+            Portfoli-AI is essentially a sophisticated data transformation pipeline. The goal is to take high-density,
+            low-engagement data (a PDF) and turn it into high-engagement, interactive content.
+        </p>
+
+        <h3>1. De-structuring (Ingestion)</h3>
+        <p>
+            Raw PDF binary data is read using <code>PyPDF</code>. This produces a single, large string of
+            unformatted text.
+        </p>
+
+        <h3>2. Structuring (Extraction)</h3>
+        <p>
+            The LLM acts as an "unstructured-to-structured" converter. The output is a JSON object with
+            well-defined keys, but the content is still essentially a direct mirror of the resume.
+        </p>
+
+        <h3>3. Synthesis (Content Generation)</h3>
+        <p>
+            This is where the magic happens. The LLM processes the structured JSON and expands it. For
+            example, a project listed as "React App" might be expanded into "Developed a high-performance
+            React-based dashboard with real-time state management."
+        </p>
+
+        <h2>The Graph State Object</h2>
+        <p>
+            The <code>GraphState</code> is the single source of truth during the transformation.
+            It ensures that each node knows exactly what it needs to do and what the previous node
+            accomplished.
+        </p>
+
+        <div class="code-header">
+            <span class="file-path">generator.py</span>
+        </div>
+        <pre><code class="language-python">class GraphState(TypedDict):
+    resume_text: str       # Input from UI
+    structured_data: Dict  # Output from extraction_node
+    portfolio_content: Dict # Output from generation_node
+    error: str</code></pre>
+
+        <h2>Future-Proofing: Error Handling</h2>
+        <p>
+            By using a graph, we can easily add "conditional edges" in the future. For example, if the
+            <code>structured_data</code> is missing a name, the graph could loop back to the extractor
+            with a more specific prompt before moving to the generator.
+        </p>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+</body>
+
+</html>

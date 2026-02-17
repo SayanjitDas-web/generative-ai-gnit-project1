@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend | Portfoli-AI Docs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <aside class="sidebar">
+        <a href="index.html" class="logo">Portfoli-AI</a>
+
+        <nav class="nav-section">
+            <div class="nav-title">Introduction</div>
+            <a href="index.html" class="nav-link">Getting Started</a>
+            <a href="architecture.html" class="nav-link">System Architecture</a>
+        </nav>
+
+        <nav class="nav-section">
+            <div class="nav-title">Core Engine</div>
+            <a href="ai-engine.html" class="nav-link">AI & LangGraph</a>
+            <a href="backend.html" class="nav-link active">Backend & DB</a>
+        </nav>
+
+        <nav class="nav-section">
+            <div class="nav-title">Interface</div>
+            <a href="frontend.html" class="nav-link">Frontend & UI</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <h1>Backend & Database</h1>
+        <p>
+            The backend is built with <strong>FastAPI</strong>, chosen for its speed and native support for
+            asynchronous operations, which is critical when waiting for LLM responses.
+        </p>
+
+        <h2>Database Models</h2>
+        <p>
+            We use <strong>SQLAlchemy</strong> with a SQLite backend for structured data (Users and Portfolios).
+        </p>
+
+        <div class="code-header">
+            <span class="file-path">models.py</span>
+        </div>
+        <pre><code class="language-python">class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True)
+    username = Column(String, unique=True)
+    hashed_password = Column(String)
+    openrouter_key = Column(String, nullable=True)
+
+class Portfolio(Base):
+    __tablename__ = "portfolios"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    content = Column(JSON)  # Stores generated web content</code></pre>
+
+        <h2>Knowledge Base (ChromaDB)</h2>
+        <p>
+            For the AI Representative feature, we use <strong>ChromaDB</strong>. This allows us to perform
+            semantic searches over the user's career history to answer visitor questions accurately.
+        </p>
+
+        <div class="code-header">
+            <span class="file-path">database.py</span>
+        </div>
+        <pre><code class="language-python">class PortfolioVectorDB:
+    def __init__(self, collection_name="resume_vault"):
+        self.client = chromadb.PersistentClient(path="./chroma_db")
+        self.collection = self.client.get_or_create_collection(name=collection_name)
+
+    def query_resume(self, user_id, query_text):
+        results = self.collection.query(
+            query_texts=[query_text],
+            where={"user_id": user_id}
+        )
+        return results["documents"][0]</code></pre>
+
+        <h2>Core Routing</h2>
+        <p>
+            FastAPI handles authentication via cookie-based sessions and provides the endpoints for
+            resume uploading and portfolio viewing.
+        </p>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+</body>
+
+</html>
